@@ -1,6 +1,9 @@
 
 # Library Management Tool
 
+> *This is a final term project for my Data structures and Algorithms class and was instructed by Mr Luu Nguyen Ki Thu.*
+
+---
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
@@ -11,12 +14,11 @@
   - [Program functionality](#program-functionality)
   - [Review and evaluation](#review-and-evaluation)
   - [Used tech](#used-tech)
+  - [Future update](#future-update)
 
 <!-- /code_chunk_output -->
 
 ---
-
-> *This is a final term project for my Data structures and Algorithms class and was instructed by Mr Luu Nguyen Ki Thu.*
 
 ## Project description
 
@@ -153,3 +155,7 @@ Overall from my personal view, I will give myself a solid 7 due to the first tim
 - Programming language: `C++20`
 - Framework: `Graphic.h` - a combination of `Winbase.h` header and some other header. Here is a link to the [BGI Documentation](https://home.cs.colorado.edu/~main/bgi/doc/) and the Microsoft [`Winbase` header](https://learn.microsoft.com/en-us/windows/win32/api/winbase/).
 - OOP technique.
+
+## Future update
+
+Base on the passed experience with the developing process, I will create an updated version of the code using a better solution for the encountered problems.
