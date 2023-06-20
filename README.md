@@ -1,127 +1,142 @@
 
-# Library Management Tool - Công cụ quản lí thư viện
+# Library Management Tool
 
 ---
 
-## Project description - Mô tả dự án
+> *This is a final term project for my Data structures and Algorithms class and was instructed by Mr Luu Nguyen Ki Thu.*
 
-Đây là đồ án kết thúc môn học **Cấu trúc dữ liệu và Giải thuật** do thầy ***Lưu Nguyễn Kì Thư*** phụ trách.
+## Project description
 
-***Sinh viên thực hiện:***
+Design a program for managing the library which contains these lists:
 
-| Họ và tên              |    MSSV    |
-|:-----------------------|:----------:|
-| Nguyễn Nhật Minh       | N21DCCN053 |
-| Trần Thị Thùy Ngân     | N21DCCN055 |
-| Nguyễn Ngọc Thiên Phúc | N21DCCN066 |
+1. `Title list` is a linear list of `Title`, with each element of the list is a pointer points to a `Title` object (an instance of class `Title`).
 
-### Chi tiết đề bài
+    - By default, the list is sorted by the title's name.
+    - Each title has a unique ISBN code with $4$ capitalized Alphabet character.
 
-Thiết kế một chương trình thư viện có các danh sách sau:
+```mermaid
+classDiagram
+    class Title {
+        -String ISBN
+        -String Title
+        -int PageCount
+        -String Author
+        -int PublicationYear
+        -String Category
+        -LinkedList<Book> Catalogue
+    }
+```
 
-1. **Đầu sách**: là một danh sách tuyến tính theo dạng mảng con trỏ. Mỗi phần tử của danh sách là một đầu sách có các `field` sau:
+2. `Catalogue` (or book list) is a linked list, with each element of the list is a `Book` object.
 
-    | Fields                | Description                                       | Data type                                                           |
-    |:----------------------|:--------------------------------------------------|:--------------------------------------------------------------------|
-    | <ins>***ISBN***</ins> | Mã đầu sách                                       | Chuỗi duy nhất tối đa $4$ kí tự gồm các chữ cái in hoa từ `A` - `Z` |
-    | Tên sách              | Tên của đầu sách                                  | Chuỗi tối đa $50$ kí tự                                             |
-    | Số trang              | Số trang của đầu sách                             | Số nguyên dương                                                     |
-    | Tác giả               | Tên tác giả đầu sách                              | Chuỗi tối đa $40$ kí tự                                             |
-    | Năm xuất bản          | Năm xuất bản đầu sách                             | Số nguyên dương                                                     |
-    | Thể loại              | Thể loại của đầu sách                             | Chuỗi tối đa $20$ kí tự                                             |
-    | Con trỏ danh mục sách | Con trỏ trỏ đến danh sách các sách thuộc đầu sách | Con trỏ                                                             |
+    - Each `Book` has a unique ID with the format: `{ISBN}-{Book number}`
+    - Each `Book` has $3$ status:
 
-    ***Ghi chú:*** 
-    1. Danh sách đầu sách luôn tăng dần theo tên sách.
-    2. Chuỗi `ISBN` duy nhất cho mỗi đầu sách.
+        1. `AVAILABLE`: reader can borrow the book.
+        2. `UNAVAILABLE`: reader cannot borrow the book.
+        3. `SOLD`: sold, reader cannot borrow the book.
 
-2. **Danh mục sách**: là một danh sách liên kết đơn với mỗi `node` là một sách có các `field` sau:
+    - The `Book` description will describes the book's position in the library so that the librarian know where the book is. The description follows the format: `ROW {X} COLUMN {Y} SECTION {Z}`.
 
-    |          Fields          | Description                               | Data type                        |
-    |:------------------------:|:------------------------------------------|:---------------------------------|
-    | <ins>***Mã sách***</ins> | Mã sách của từng cuốn sách thuộc đầu sách | Chuỗi duy nhất tối đa $14$ kí tự |
-    |        Trạng thái        | Trạng thái của cuốn sách hiện tại         | Enum                             |
-    |          Vị trí          | Mô tả vị trí của cuốn sách trên giá sách  | Chuỗi định dạng sẵn              |
+```mermaid
+classDiagram
+    class Book {
+        -String ID
+        -Enum Status
+        -String Description
+    }
+```
 
-    - Mỗi cuốn sách thuộc đầu sách có các trạng thái như sau:
+3. `Reader list` is an AVL Tree, with each node contains a `Reader` object. By default, the reader list is sorted by ID due to the effect of the AVL Tree data structure used to contain the list.
 
-        | Trạng thái | Ý nghĩa                              |
-        |:----------:|:-------------------------------------|
-        |     0      | Cho mượn được                        |
-        |     1      | Đã có độc giả mượn (không mượn được) |
-        |     2      | Đã thanh lý (không mượn được)        |
+    - Each `Reader` has an unique ID which is a unique automatically random-generated integer.
+    - Each `Reader` has $2$ status:
 
-    - Vị trí của sách sẽ gồm các thông tin vị trí dòng, cột và tủ. Theo đó chuỗi vị trí sẽ có định dạng: `DONG {X} COLUMN {Y} SECTION {Z}` và có tối đa $20$ kí tự.
+        1. `ACTIVE`: the reader is allowed to borrow books.
+        2. `BANNED`: the reader is not allowed to borrow books.
 
-    ***Ghi chú:*** Mã sách duy nhất cho mỗi cuốn sách.
+    - Each `Reader` gender is either `MALE` or `FEMALE`.
 
-3. **Danh sách thẻ độc giả**: là cây nhị phân tìm kiếm cân bằng với mỗi `node` có các `field` sau:
+```mermaid
+classDiagram
+    class Reader {
+        -Integer ID
+        -String FirstName
+        -String LastName
+        -Enum Gender
+        -Enum Status
+        -DoubleLinkedList BorrowedBookList
+    }
+```
 
-    | Fields                  | Description                                    | Data type                                   |
-    |:------------------------|:-----------------------------------------------|:--------------------------------------------|
-    | <ins>***Mã thẻ***</ins> | Mã thẻ của mỗi độc giả                         | Số nguyên ngẫu nhiên phân biệt sinh tự động |
-    | Họ                      | Họ của độc giả                                 | Chuỗi tối đa $30$ kí tự                     |
-    | Tên                     | Tên của độc giả                                | Chuỗi tối đa $10$ kí tự                     |
-    | Phái                    | Giới tính của độc giả                          | Enum                                        |
-    | Trạng thái của thẻ      | Mô tả trạng thái hoạt động của thẻ             | Enum                                        |
-    | Con trỏ                 | Trỏ tới danh sách các cuốn sách đang được mượn | Con trỏ                                     |
+4. `BorrowedBookList` is a double linked list of `BorrowedBook` object.
 
-    - Mỗi thẻ độc giả có các trạng thái sau:
+    - Each `BorrowedBook` has $3$ status:
 
-        | Trạng thái | Ý nghĩa                             |
-        |:----------:|:------------------------------------|
-        |     0      | Thẻ bị khóa (không mượn được sách)  |
-        |     1      | Thẻ đang hoạt động (được mượn sách) |
+        1. `BORROWING`: the book is currently borrowed by this reader.
+        2. `RETURNED`: the book used to be borrowed by this reader and now has been returned.
+        3. `LOST`: the book used to be borrowed by this reader and now the reader has lost the book.
 
-    ***Ghi chú:*** Mã thẻ được sinh tự động ngẫu nhiên.
+```mermaid
+classDiagram
+    class BorrowedBook {
+        -String BookID
+        -Date BorrowDate
+        -Date ReturnDate
+        -Enum Status
+    }
+```
 
-4. **Danh sách mượn trả**: là danh sách liên kết kép với mỗi `node` có các field sau:
+## Program functionality
 
-    |           Fields           | Description                        | Data type                |
-    |:--------------------------:|:-----------------------------------|:-------------------------|
-    |  <ins>***Mã sách***</ins>  | Mã của cuốn sách đang mượn         | Chuỗi tối đa $14$ ksi tự |
-    | <ins>***Ngày mượn***</ins> | Ngày mượn cuốn sách                | Date & Time              |
-    |          Ngày trả          | Ngày trả sách                      | Date & Time              |
-    |         Trạng thái         | Trạng thái của cuốn sách đang mượn | Enum                     |
+1. Apply these operation to the `Reader` object: Create new `Reader`, Update a `Reader` infomation and Delete a `Reader` in the reader list.
 
-    - Mỗi cuốn sách sẽ có các trạng thái sau:
+2. Print the reader list. By default the list will be sorted by ID. In addition to that, add a functionality to sort the list by the reader's first name then last name.
 
-        | Trạng thái | Ý nghĩa                   |
-        |:----------:|:--------------------------|
-        |     0      | Sách đang mượn (chưa trả) |
-        |     1      | Sách đã trả               |
-        |     2      | Sách bị mất               |
+3. Apply these operation to the `Title` object: Create new `Title`, Update a `Title` infomation and Delete a `Title` in the title list. After creating a new `Title`, the librarian will add a bunch of books to the library, therefore add a functionality to create a list of `Book` object. The `Book` object's ID is auto generated. Also apply the Create/Update/Delete functionality to each `Book` object of the catalogue of each `Title` object. The librarian can delete a `Book` object if and only if that book has not been borrowed by any reader.
 
-### Yêu cầu đề bài
+4. Print the title list. By default the list will be sorted by title. Add the functionality to sort the list by category, and in each category sorted by title.
 
-1. Nhập thẻ độc giả: thêm / xóa / hiệu chỉnh thông tin thẻ độc giả. Mã thẻ độc giả được chương trình tự động lấy ngẫu nhiên và không trùng với các mã thẻ độc giả cũ; Phái chỉ nhận ‘Nam’ hoặc ‘Nữ’; trạng thái thẻ = 0 khi thẻ bị khóa, trạng thái thẻ = 1 khi thẻ đang hoạt động (được quyền mượn sách).
+5. Searching `Title` functionality by title, ISBN, category, author, publication year, status.
 
-2. In danh sách độc giả: in ra màn hình theo thứ tự tên+họ tăng dần hoặc theo thứ tự mã độc giả tăng dần theo yêu cầu của thủ thư.
+6. Borrow `Book` functionality: the reader will given the `Book` object's ID they want to borrow. The program should be able to detect if the reader has the ability to borrow the book or not. A reader cannot borrow a book if the violate one of these rules:
 
-3. Nhập thông tin đầu sách và đánh mã sách tự động. Chương trình cho phép xóa 1 mã sách nếu mã sách này chưa cho độc giả mượn.
+    1. The reader borrowed more than $3$ books.
+    2. The reader borrowed a book more than 7 days. After the 7-th day from the borrow day, every book the reader has borrowed will be an overdue book.
+    3. The reader want to borrow a book which belong to the same `Title` of a borrowed book.
 
-4. In danh sách các đầu sách trong thư viện theo từng thể loại, trong từng thể loại thì in theo thứ tự tên sách tăng dần.
+7. Return book functionality.
 
-5. Tìm thông tin sách dựa vào tên sách: in ra các thông tin mã ISBN, tên sách, tác giả, năm xuất bản, thể loại, các mã sách , trạng thái mã sách trong thư viện.
+8. Print the list of currently borrowing and borrowed book of a specific reader.
 
-6. Mượn sách: nhập vào mã thẻ độc giả, chương trình sẽ liệt kê các sách mà độc giả đang mượn. Mỗi độc giả chỉ được mượn tối đa 3 cuốn, không cho mượn khi giữ 1 sách quá hạn (7 ngày) hoặc nếu các sách mượn thuộc cùng 1 đầu sách.
+9. Create a table of reader who has an overdue book in their borrowed book list. The table should display the overdue day count in descending order and base on the below table:
 
-7. Trả sách.
+| Reader's ID | First name | Last name | Title | Borrow date | Overdue date count |
+| :---------: | :--------- | :-------- | :---: | :---------: | :----------------: |
+|     ...     | ...        | ...       |  ...  |     ...     |        ...         |
 
-8. Liệt kê danh sách các mã sách, tên sách mà 1 độc giả có số thẻ X đang mượn.
+10. Show the top 10 most borrowed title.
 
-9. In danh sách độc giả mượn sách quá hạn theo thứ tự thời gian quá hạn giảm dần. Kết xuất:
-    
-    `Mathe | Ho | tên | Masach |Tên sách | Ngày mượn | Số ngày quá hạn`
+## Review and evaluation
 
-10. In 10 đầu sách có số lượt mượn nhiều nhất.
+The final product was preview and tested by Mr Thu on the Friday, June 16 2023. Sadly he did not tested all the functionality by he did left some comments:
 
----
+- Good UI experience. He mentioned that the searching functionality is easy to use and the design is simple.
+- Unoptimized design on the program infrastructures and code base.
+- Existance of some unneeded feature such as the ranking in the top 10 most borrowed title and some core algorithms.
 
-## Bảng đọc giả mượn sách
+The code base is made by me and the database was contributed by Ngan. Therefore I got myself some personal evaluations:
 
-Ứng với mỗi mã sách $x$ thuộc đầu sách $y$, một bảng gồm các thông tin độc giả mượn sách đó sẽ được hiện ra:
+- The UI is kind of old fashion and rough, due to the usage of the framework I had used and lack of personal UI design experience.
+- Missing some of the handy functionality such as the functionality for displaying notification window or some research table.
+- Lacking of a error catching system.
+- The un-uniform in the code base design is a huge draw back when the program code base started to scale up and more and more functionality get added to the program.
+- Lacking of consistency in naming convension and program design.
 
-| Order | Mã đọc giả | Tên độc giả | Trạng thái | Ngày mượn | Ngày trả |
-|-------|------------|-------------|------------|-----------|----------|
-| X     | prop 1     | prop 1      | prop 1     | prop 1    | prop 1   |
+Overall from my personal view, I will give myself a solid 7 due to the first time from A-Z project without any instructions and helping from teammates.
+
+## Used tech
+
+- Programming language: `C++20`
+- Framework: `Graphic.h` - a combination of `Winbase.h` header and some other header. Here is a link to the [BGI Documentation](https://home.cs.colorado.edu/~main/bgi/doc/) and the Microsoft [`Winbase` header](https://learn.microsoft.com/en-us/windows/win32/api/winbase/).
+- OOP technique.
