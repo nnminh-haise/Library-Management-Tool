@@ -1,6 +1,19 @@
 
 # Library Management Tool
 
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Library Management Tool](#library-management-tool)
+  - [Project description](#project-description)
+  - [Program functionality](#program-functionality)
+  - [Review and evaluation](#review-and-evaluation)
+  - [Used tech](#used-tech)
+
+<!-- /code_chunk_output -->
+
 ---
 
 > *This is a final term project for my Data structures and Algorithms class and was instructed by Mr Luu Nguyen Ki Thu.*
